@@ -37,11 +37,7 @@ def fetch_all_users(query: str):
     conn = sqlite3.connect("users.db")
     cursor = conn.cursor()            # ← typo fixed (cursor, not cusor)
     cursor.execute(query,)
-    rows = cursor.fetchall()
+    result = cursor.fetchall()
     conn.close()
-    return rows
+    return result
 
-# Example call
-if __name__ == "__main__":
-    users = fetch_all_users("SELECT * FROM users WHERE id = ?", (user_id,))
-    print(users)
