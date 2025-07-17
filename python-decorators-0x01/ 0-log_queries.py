@@ -41,4 +41,4 @@ def fetch_all_users(query: str):
     conn.close()
     return result
 
-users = fatch_all_users("SELECT * FROM users;")
+users = fetch_all_users("SELECT * FROM users;")
