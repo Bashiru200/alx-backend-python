@@ -35,9 +35,10 @@ def log_queries(func):
 def fetch_all_users(query: str):
     """Run the provided SQL query and return all rows."""
     conn = sqlite3.connect("users.db")
-    cursor = conn.cursor()            # ← typo fixed (cursor, not cusor)
+    cursor = conn.cursor()         
     cursor.execute(query,)
     result = cursor.fetchall()
     conn.close()
     return result
 
+users = fatch_all_users("SELECT * FROM users;")
