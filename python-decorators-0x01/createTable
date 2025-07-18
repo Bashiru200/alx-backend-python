@@ -1,0 +1,31 @@
+import sqlite3
+from functools import wraps
+
+def dbTable(func):
+    @wraps(func)
+    def wrapper():
+        conn = sqlite3.connect("users.db")
+        cursor = conn.cursor()
+        result = func(cursor)
+        conn.commit()
+        conn.close()
+        return result
+    return wrapper
+
+@dbTable
+def create_table(cursor):
+    """Create a users table."""
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            age INTEGER NOT NULL,
+            email TEXT NOT NULL UNIQUE
+        );
+    ''')
+   
+    return "Table created successfully."
+
+if __name__ == "__main__":
+    result = create_table()
+    print(result)  # Output: Table created successfully.
