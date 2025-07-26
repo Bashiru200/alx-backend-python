@@ -33,7 +33,7 @@ class Message(models.Model):
 
 class Conversation(models.Model):
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
-    participant = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='conversations')
+    participant = models.ManyToManyField(Users, related_name='conversations')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
