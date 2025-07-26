@@ -1,4 +1,4 @@
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Conversation, Message
@@ -8,6 +8,10 @@ from .serializers import ConversationSerailizer, MessageSerializer
 class ConversationViewSets(viewsets.ModelViewSet):
     queryset = Conversation.objects.all().prefetch_related('message', 'participant')
     serializer_class = ConversationSerailizer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['participants__user_id']
+
+
 
     def create(self, request, *args, **kwargs):
         # create a conversation with participant
@@ -24,6 +28,8 @@ class ConversationViewSets(viewsets.ModelViewSet):
 class MessageViewSets(viewsets.ModelViewSet):
     queryset = Message.objects.select_related('sender', 'conversation').all()
     serializer_class = MessageSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['participants__user_id']
 
     def  create(self, request, *args, **kwargs):
         #send message to an existing conversation
