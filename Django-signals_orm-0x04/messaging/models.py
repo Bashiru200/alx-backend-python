@@ -8,6 +8,7 @@ class Message(models.Models):
     timestamp = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
     parent_message = models.ForeignKey('self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE)
+    unread = models.BooleanField(default=False)
 
 class Notification(models.Models):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='notifications', on_delete=models.CASCADE)
@@ -20,4 +21,3 @@ class MessageHistory(models.Models):
     change_type = models.CharField(max_length=50)
     edited_by = models.ForeignKey(settings.Auth_USER_MODEL, related_name='message_history', on_delete=models.CASCADE)
     change_timestamp = models.DateTimeField(auto_now_add=True)
-

@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.http import get_user_model
-from .models import Message
+from .models import Message, UnreadMessagesManager
 
 User = get_user_model()
 
@@ -22,3 +22,7 @@ def conversation_view(request, conversation_owner):
         .prefetch_related('replies')
     thread = bulid_threaded(root_msgs)
     return render(request, 'chat/threaded.html', {'thread' : thread}
+
+def unreadmessages(request):
+    unread_messages = UnreadMessagesManager().get_queryset()
+    return render(request, 'chat/unread_messages.html', {'unread_messages': unread_messages})
