@@ -6,6 +6,7 @@ class Message(models.Models):
     receiver = models.CharField(max_length=255)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+    edited_at = models.DateTimeField(auto_now=True)
 
 
 class Notification(models.Models):
@@ -13,3 +14,8 @@ class Notification(models.Models):
     message = models.ForeignKey(Message, related_name='notifications', on_delete=models.CASCADE)
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class MessageHistory(models.Models):
+    message = models.ForeignKey(Message, related_name='history', on_delete=models.CASCADE)
+    change_type = models.CharField(max_length=50)
+    change_timestamp = models.DateTimeField(auto_now_add=True)
