@@ -28,4 +28,5 @@ User = get_user_model()
 @receiver(post_delete, sender=Message)
 def delete_user(sender, instance, origin=None, **kwargs):
     if origin is None or not instance(origin, User):
+        Message.objects.filter(sender=instance.sender).delete()
         pass
