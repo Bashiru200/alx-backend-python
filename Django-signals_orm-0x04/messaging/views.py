@@ -107,7 +107,7 @@ def conversation_view(request, conversation_owner):
 @login_required
 def unreadmessages(request):
     sender = request.user
-    unread_messages = Message.unread.unread_for_user(sender)
+    unread_messages = Message.unread.unread_for_user(sender).only()
     return render(request, 'chat/unread_messages.html', {'unread_messages': unread_messages})
 
 
