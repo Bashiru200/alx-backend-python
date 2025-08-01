@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Conversation, Message
 from .serializers import ConversationSerailizer, MessageSerializer
+from django.views.decorators.cache import cache_page
+
 
 # Create your views here.
 class ConversationViewSets(viewsets.ModelViewSet):
@@ -65,3 +67,10 @@ class MessageViewSets(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         conversation_id = self.kwargs.get('conversation_pk')
         serializer.save(conversation_id=conversation_id)
+
+# cache_page decorator to cache the response for 60 seconds
+@cache_page(60)
+def convrsation_messages(request, conversation_pk):
+    #fetch messages for a specific conversation
+    message = Message.objects.filter(conversation_id=conversation_id).order_by('sent_at')
+    return render(request, 'conversations/messages.html', {'messages': messages})
