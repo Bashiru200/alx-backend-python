@@ -62,5 +62,5 @@ def unreadmessages(request):
 @cache_page(60)
 def convrsation_messages(request, conversation_pk):
     #fetch messages for a specific conversation
-    message = Message.objects.filter(conversation_id=conversation_id).order_by('sent_at')
+    message = Message.objects.filter(conversation_id=conversation_pk).order_by('sent_at')
     return render(request, 'conversations/messages.html', {'messages': messages})
