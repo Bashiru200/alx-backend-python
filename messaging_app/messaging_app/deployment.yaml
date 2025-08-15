@@ -15,12 +15,12 @@ spec:
     spec:
       containers:
       - name: django
-        image: your-django-image:tag   # e.g. username/messaging_app:latest
+        image: bashdoc12/messaging-app:latest # e.g. username/messaging_app:latest
         ports:
         - containerPort: 8000
         env:
         - name: DJANGO_SETTINGS_MODULE
-          value: "your_project_name.settings"
+          value: "messaging_app.settings"
         - name: DEBUG
           value: "True"
 ---

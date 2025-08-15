@@ -1,0 +1,43 @@
+#!/bin/bash
+
+# Script: kubctl-0x01
+# Purpose: Scale Django app in Kubernetes and test performance
+
+# Set deployment and service names
+DEPLOYMENT_NAME="messaging-app-deployment"
+SERVICE_NAME="messaging-app-service"
+NAMESPACE="default"
+
+echo "📈 Scaling deployment '$DEPLOYMENT_NAME' to 3 replicas..."
+kubectl scale deployment $DEPLOYMENT_NAME --replicas=3 --namespace=$NAMESPACE
+
+echo "⏳ Waiting for pods to become ready..."
+sleep 10
+
+echo "🔍 Checking running pods..."
+kubectl get pods -l app=messaging-app --namespace=$NAMESPACE
+
+echo "🌐 Getting ClusterIP service details..."
+CLUSTER_IP=$(kubectl get service $SERVICE_NAME -o jsonpath='{.spec.clusterIP}' --namespace=$NAMESPACE)
+PORT=$(kubectl get service $SERVICE_NAME -o jsonpath='{.spec.ports[0].port}' --namespace=$NAMESPACE)
+
+if [ -z "$CLUSTER_IP" ]; then
+  echo "❌ Service IP not found. Make sure the service exists."
+  exit 1
+fi
+
+echo "✅ Service is available at $CLUSTER_IP:$PORT"
+
+echo "🚀 Running load test using wrk..."
+
+# Note: wrk must be installed and this script should run in a pod or node that can reach the ClusterIP (e.g., via `kubectl run`)
+wrk -t4 -c20 -d10s http://$CLUSTER_IP:$PORT/
+
+echo "📊 Monitoring resource usage with kubectl top..."
+
+# Check if metrics-server is installed
+if ! kubectl top pods &>/dev/null; then
+  echo "❌ 'kubectl top' requires metrics-server. Please install it first."
+else
+  kubectl top pods --namespace=$NAMESPACE
+fi
