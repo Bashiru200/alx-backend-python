@@ -1,0 +1,16 @@
+#!/bin/bash
+
+echo "🚀 Triggering rolling update to version 2.0..."
+kubectl apply -f blue_deployment.yaml
+
+echo "⏳ Monitoring rollout..."
+kubectl rollout status deployment messaging-app-blue
+
+echo "🔁 Sending continuous requests to test for downtime..."
+for i in {1..10}; do
+  curl -s http://<minikube-ip>/api/ && echo ""
+  sleep 1
+done
+
+echo "✅ Verifying updated pods:"
+kubectl get pods -l version=blue -o wide

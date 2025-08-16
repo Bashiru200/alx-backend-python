@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
       - name: django
-        image: bashdoc12/messaging-app:latest # e.g. username/messaging_app:latest
+        image: bashdoc12/messaging-app:2.0
+
         ports:
         - containerPort: 8000
         env:
